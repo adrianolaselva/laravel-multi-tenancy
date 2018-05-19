@@ -19,6 +19,7 @@ class DeleteTenant extends Command
 
     public function handle()
     {
+
         // because this is a destructive command, we'll only allow to run this command
         // if you are on the local environment
         if (!app()->isLocal()) {
@@ -27,6 +28,16 @@ class DeleteTenant extends Command
         }
 
         $name = $this->argument('name');
+
+        if(!Customer::where('name', $name)->exists()){
+            $this->error("Tenancy {$name} não encontrado.");
+            return;
+        }
+
+
+            if(!$this->confirm("Tem certeza que deseja remover este tenancy?"))
+                return;
+
         $this->deleteTenant($name);
     }
 
